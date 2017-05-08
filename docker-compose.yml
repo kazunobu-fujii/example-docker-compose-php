@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+      - mq
+    volumes:
+      - ./www:/var/www/html/
+    ports:
+      - "8080:80"
+    env_file: .env
+  db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_USER=${DBUSER}
+      - POSTGRES_DB=${DBNAME}
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+  mq:
+    image: kazunobufujii/memcacheq
+    volumes:
+      - mq-volume:/var/lib/memcacheq
+
+volumes:
+  db-volume:
+  mq-volume:
+
